@@ -1,5 +1,4 @@
 # My Python project template
-This template was initially developed by Francis Pelletier <fplt.softwaredeveloper@gmail.com>.
 
 ## Description
 
