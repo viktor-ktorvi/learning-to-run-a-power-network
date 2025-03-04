@@ -1,4 +1,6 @@
-# My Python project template
+# Learning to run a power network 
+
+Trying out some things for the [grid2op](https://grid2op.readthedocs.io/en/latest/index.html) RL power grid environment.
 
 ## Description
 
