@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "src"
 version = "0.0.0"
-description = ""
+description = "Trying out some thing is grid2op."
 authors = [ "Viktor Todosijevic <todosijevicviktor998@gmail.com>" ]
 readme = "README.md"
 

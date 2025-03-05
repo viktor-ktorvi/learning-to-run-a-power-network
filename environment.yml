@@ -1,4 +1,4 @@
-name: my-python-project-env
+name: grid2op-env
 channels:
   - conda-forge
 dependencies:
