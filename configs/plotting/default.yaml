@@ -1,0 +1,8 @@
+font:
+  size: 14
+
+figure:
+  figsize: [16,9]
+  dpi: 130
+
+subplot_title_fontsize: 13
