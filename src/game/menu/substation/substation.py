@@ -41,11 +41,16 @@ class SubstationSubmenu(ipywidgets.VBox):
         )
 
         self.connecting_lines_submenu = ConnectingLineSubmenu(game, outputs, widget_width)
+        # TODO connecting generator and load submenus
+        #  same pattern -- element selection + busbar selection + update and register callbacks
+        #  then orchestrating from here
 
         # connecting element submenu
         self.connecting_element_submenu = ipywidgets.VBox()
         self.set_connecting_element_submenu()
         self.connecting_element_type_widget.observe(self.set_connecting_element_submenu)
+
+        # ORCHESTRATING THE CALLBACKS
 
         # connecting line callbacks
         self.update_connecting_line_widget()

@@ -32,6 +32,14 @@ class Menu(ipywidgets.VBox):
             layout=ipywidgets.Layout(width=self.widget_width),
         )
 
+        self.element_type_submenu = ipywidgets.VBox()
+
+        # element submenu
+        # TODO other potential submenus, e.g., generator, line
+        self.substation_submenu = SubstationSubmenu(self.game, self.outputs, self.widget_width)
+        self.set_element_type_submenu()
+        self.element_type_widget.observe(self.set_element_type_submenu)
+
         # clear action
         clear_action_dict_button = ipywidgets.Button(description="Clear actions")
         self.clear_action_dict()
@@ -45,13 +53,7 @@ class Menu(ipywidgets.VBox):
         # reset attempt
         reset_attempt_button.on_click(self.reset_attempt)
 
-        self.element_type_submenu = ipywidgets.VBox()
-
-        # element submenu
-        # TODO other potential submenus, e.g., generator, line
-        self.substation_submenu = SubstationSubmenu(self.game, self.outputs, self.widget_width)
-        self.set_element_type_submenu()
-        self.element_type_widget.observe(self.set_element_type_submenu)
+        # TODO reset and clear action have to update the busbar widget
 
         # continue simulation
         continue_simulation_button = ipywidgets.Button(description="Continue simulation")
@@ -79,6 +81,9 @@ class Menu(ipywidgets.VBox):
         self.game.clear_action_dict()
         self.outputs.action.clear_output()
         self.game.print_action_dict()
+
+        # TODO add the other submenu callbacks
+        self.substation_submenu.update_connecting_line_busbar_widget()
 
     @outputs.plot.capture()
     def continue_simulation(self, *args):
@@ -119,3 +124,6 @@ class Menu(ipywidgets.VBox):
         self.game.plotter.plot_obs(self.game.observation)
         plt.gcf().suptitle("Grid with a problematic state")
         show_inline_matplotlib_plots()
+
+        # TODO add the other submenu callbacks
+        self.substation_submenu.update_connecting_line_busbar_widget()

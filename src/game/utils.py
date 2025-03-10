@@ -20,19 +20,19 @@ def get_line_id(environment: Environment, substation_id: int, line_destination: 
     return line_or_idx, line_ex_idx
 
 
-def get_busbar_status(line_idx: int, action_list: list[tuple[int, int]], observation_line_bus: np.array):
+def get_busbar_status(element_idx: int, action_list: list[tuple[int, int]], element_busbar_statuses: np.array):
     """
     Get the status of a given busbar. If an action has been performed return the status after the action, otherwise read
     the status from the environment observation.
 
     Parameters
     ----------
-    line_idx: int
+    element_idx: int
         Line index.
     action_list: list[tuple[int, int]]
         List of actions performed.
-    observation_line_bus: np.array
-        Numpy array containing the status of the lines and their busbars.
+    element_busbar_statuses: np.array
+        Numpy array containing the status of busbars of the elements.
 
     Returns
     -------
@@ -40,18 +40,18 @@ def get_busbar_status(line_idx: int, action_list: list[tuple[int, int]], observa
         Busbar status.
     """
     for action_tuple in action_list:
-        if action_tuple[0] == line_idx:
+        if action_tuple[0] == element_idx:
             return action_tuple[1]
 
-    return observation_line_bus[line_idx]
+    return element_busbar_statuses[element_idx]
 
 
 def add_or_overwrite_action(
-    new_action_tuple: tuple[int, int], action_list: list[tuple[int, int]], observation_line_bus: np.array
+    new_action_tuple: tuple[int, int], action_list: list[tuple[int, int]], element_busbar_statuses: np.array
 ) -> list[tuple[int, int]]:
     """
-    Add the new action tuple if the line being acted on is not already there. Otherwise, overwrite the action for that
-    line.
+    Add the new action tuple if the element being acted upon is not already there. Otherwise, overwrite the action for
+    that element.
 
     Parameters
     ----------
@@ -59,7 +59,7 @@ def add_or_overwrite_action(
         New action tuple (line_idx, busbar).
     action_list: list[tuple[int, int]]
         Action list.
-    observation_line_bus: np.array
+    element_busbar_statuses: np.array
         Numpy array containing the status of the lines and their busbars.
 
     Returns
@@ -73,14 +73,14 @@ def add_or_overwrite_action(
             action_list[i] = new_action_tuple
 
             # if the action just reverts everything to the original state
-            if observation_line_bus[new_action_tuple[0]] == new_action_tuple[1]:
+            if element_busbar_statuses[new_action_tuple[0]] == new_action_tuple[1]:
                 del action_list[i]
 
             exists_flag = True
             break
 
     # add action if it doesn't already exist and if it actually changes the current state
-    if not exists_flag and observation_line_bus[new_action_tuple[0]] != new_action_tuple[1]:
+    if not exists_flag and element_busbar_statuses[new_action_tuple[0]] != new_action_tuple[1]:
         action_list.append(new_action_tuple)
 
     return action_list

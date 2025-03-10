@@ -24,7 +24,7 @@ class Game:
         self.observation = environment.reset()
 
     def clear_action_dict(self):
-        self.action_dict = {"set_bus": {"lines_or_id": [], "lines_ex_id": []}}
+        self.action_dict = {"set_bus": {"lines_or_id": [], "lines_ex_id": [], "generators_id": [], "loads_id": []}}
 
     def print_action_dict(self):
         arrange_str = ""
