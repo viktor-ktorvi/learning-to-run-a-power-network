@@ -27,20 +27,49 @@ class Game:
         self.action_dict = {"set_bus": {"lines_or_id": [], "lines_ex_id": [], "generators_id": [], "loads_id": []}}
 
     def print_action_dict(self):
-        arrange_str = ""
+        line_indices_str = ""
         line_or_to_subid_str = ""
         line_ex_to_subid_str = ""
+
+        idx_formatting = "4d"
+
         for i in np.arange(self.environment.n_line):
-            arrange_str += f"{i:4d}"
-            line_or_to_subid_str += f"{self.environment.line_or_to_subid[i]:4d}"
-            line_ex_to_subid_str += f"{self.environment.line_ex_to_subid[i]:4d}"
+            line_indices_str += f"{i:{idx_formatting}}"
+            line_or_to_subid_str += f"{self.environment.line_or_to_subid[i]:{idx_formatting}}"
+            line_ex_to_subid_str += f"{self.environment.line_ex_to_subid[i]:{idx_formatting}}"
+
+        gen_indices_str = ""
+        gen_to_subid_str = ""
+        for i in np.arange(self.environment.n_gen):
+            gen_indices_str += f"{i:{idx_formatting}}"
+            gen_to_subid_str += f"{self.environment.gen_to_subid[i]:{idx_formatting}}"
+
+        load_indices_str = ""
+        load_to_subid_str = ""
+        for i in np.arange(self.environment.n_load):
+            load_indices_str += f"{i:{idx_formatting}}"
+            load_to_subid_str += f"{self.environment.load_to_subid[i]:{idx_formatting}}"
+
+        name_formatting = "20"
+
+        dashes = "".join(["-"] * 100)
         print(
-            f"{'Line ID:':20}{arrange_str}\n\n{'line_or_to_subid:':20}{line_or_to_subid_str}\n{'line_ex_to_subid':20}{line_ex_to_subid_str}"
+            f"{'Line ID:':{name_formatting}}{line_indices_str}\n\n"
+            f"{'line_or_to_subid:':{name_formatting}}{line_or_to_subid_str}\n"
+            f"{'line_ex_to_subid:':{name_formatting}}{line_ex_to_subid_str}\n\n"
+            f"{dashes}\n"
+            f"{'Generator ID:':{name_formatting}}{gen_indices_str}\n\n"
+            f"{'gen_to_subid:':{name_formatting}}{gen_to_subid_str}\n\n"
+            f"{dashes}\n"
+            f"{'Load ID:':{name_formatting}}{load_indices_str}\n\n"
+            f"{'load_to_subid:':{name_formatting}}{load_to_subid_str}\n\n"
+            f"{dashes}\n"
         )
 
         print("\nSelected actions: ", end="")
-        pp = pprint.PrettyPrinter(depth=4)
+        pp = pprint.PrettyPrinter(depth=10)
         pp.pprint(self.action_dict)
+        print()
 
     def get_substation_ids(self) -> list[int]:
         return list(range(self.environment.n_sub))

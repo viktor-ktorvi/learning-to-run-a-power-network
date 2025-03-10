@@ -1,6 +1,5 @@
-import ipywidgets
-
 from src.game.game import Game
+from src.game.menu.substation.connecting_element import ConnectingElementSubmenu
 from src.game.utils import (
     Outputs,
     add_or_overwrite_action,
@@ -10,35 +9,22 @@ from src.game.utils import (
 
 
 # TODO docs
-class ConnectingLineSubmenu(ipywidgets.VBox):
+class ConnectingLineSubmenu(ConnectingElementSubmenu):
     def __init__(self, game: Game, outputs: Outputs, widget_width: str):
-        self.game = game
-        self.outputs = outputs
+        super().__init__("Line connecting to bus #", game, outputs, widget_width)
 
-        self.connecting_line_widget = ipywidgets.ToggleButtons(
-            description="Connecting line", layout=ipywidgets.Layout(width=widget_width)
-        )
-
-        self.busbar_widget = ipywidgets.ToggleButtons(
-            description="Busbar",
-            options=self.game.get_busbar_options(),
-            layout=ipywidgets.Layout(width=widget_width),
-        )
-
-        super().__init__(children=(self.connecting_line_widget, self.busbar_widget))
-
-    def update_connecting_line_widget(self, substation_id: int):
+    def update_connecting_element_widget(self, substation_id: int):
         environment = self.game.environment
 
         lines_ex_at_substation = list(environment.line_or_to_subid[environment.line_ex_to_subid == substation_id])
 
         lines_or_at_substation = list(environment.line_ex_to_subid[environment.line_or_to_subid == substation_id])
 
-        self.connecting_line_widget.options = lines_ex_at_substation + lines_or_at_substation
-        self.connecting_line_widget.value = self.connecting_line_widget.options[0]
+        self.connecting_element_widget.options = lines_ex_at_substation + lines_or_at_substation
+        self.connecting_element_widget.value = self.connecting_element_widget.options[0]
 
     def update_busbar_widget(self, substation_id: int):
-        line_destination = self.connecting_line_widget.value
+        line_destination = self.connecting_element_widget.value
 
         action_dict = self.game.action_dict
         observation = self.game.observation
@@ -62,7 +48,7 @@ class ConnectingLineSubmenu(ipywidgets.VBox):
         self.busbar_widget.value = busbar_status
 
     def record_busbar_actions(self, substation_id: int):
-        line_destination = self.connecting_line_widget.value
+        line_destination = self.connecting_element_widget.value
         line_or_idx, line_ex_idx = get_line_id(self.game.environment, substation_id, line_destination)
 
         observation = self.game.observation

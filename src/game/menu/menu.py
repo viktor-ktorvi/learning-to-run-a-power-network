@@ -82,8 +82,7 @@ class Menu(ipywidgets.VBox):
         self.outputs.action.clear_output()
         self.game.print_action_dict()
 
-        # TODO add the other submenu callbacks
-        self.substation_submenu.update_connecting_line_busbar_widget()
+        self.substation_submenu.update_connecting_element_busbar_widget()
 
     @outputs.plot.capture()
     def continue_simulation(self, *args):
@@ -125,5 +124,4 @@ class Menu(ipywidgets.VBox):
         plt.gcf().suptitle("Grid with a problematic state")
         show_inline_matplotlib_plots()
 
-        # TODO add the other submenu callbacks
-        self.substation_submenu.update_connecting_line_busbar_widget()
+        self.substation_submenu.update_connecting_element_busbar_widget()
