@@ -84,3 +84,6 @@ def add_or_overwrite_action(
         action_list.append(new_action_tuple)
 
     return action_list
+
+
+DONT_CLICK_THIS = "Don't click this."

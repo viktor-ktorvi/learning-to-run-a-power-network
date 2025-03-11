@@ -3,6 +3,7 @@ from enum import StrEnum
 import ipywidgets
 
 from src.game.game import Game
+from src.game.menu.substation.connecting_generator import ConnectingGeneratorSubmenu
 from src.game.menu.substation.connecting_line import ConnectingLineSubmenu
 from src.game.utils import Outputs
 
@@ -16,6 +17,7 @@ from src.game.utils import Outputs
 
 class ConnectingElementTypes(StrEnum):
     LINES = "lines"
+    GENERATORS = "generators"
 
 
 class SubstationSubmenu(ipywidgets.VBox):
@@ -42,16 +44,14 @@ class SubstationSubmenu(ipywidgets.VBox):
 
         self.connecting_element_submenus = {
             ConnectingElementTypes.LINES: ConnectingLineSubmenu(game, outputs, widget_width),
+            ConnectingElementTypes.GENERATORS: ConnectingGeneratorSubmenu(game, outputs, widget_width),
         }
-
-        # TODO connecting generator and load submenus
-        #  same pattern -- element selection + busbar selection + update and register callbacks
-        #  then orchestrating from here
 
         # connecting element submenu
         self.connecting_element_submenu = ipywidgets.VBox()
         self.set_connecting_element_submenu()
-        self.connecting_element_type_widget.observe(self.set_connecting_element_submenu)
+        self.connecting_element_type_widget.observe(self.set_connecting_element_submenu, names=["value"])
+        self.connecting_element_type_widget.observe(self.update_connecting_element_widget, names=["value"])
 
         # ORCHESTRATING THE CALLBACKS
 
@@ -63,35 +63,43 @@ class SubstationSubmenu(ipywidgets.VBox):
         for submenu in self.connecting_element_submenus.values():
             submenu.connecting_element_widget.observe(self.update_connecting_element_busbar_widget, names=["value"])
 
-            submenu.busbar_widget.observe(self.record_connecting_element_busbar_actions)
+            submenu.busbar_widget.observe(self.record_connecting_element_busbar_actions, names=["value"])
 
         super().__init__(
             children=(self.substation_ids_widget, self.connecting_element_type_widget, self.connecting_element_submenu)
         )
 
-    def set_connecting_element_submenu(self):
+    def set_connecting_element_submenu(self, *args):
         self.connecting_element_submenu = self.connecting_element_submenus[self.connecting_element_type_widget.value]
+        self.children = (
+            self.substation_ids_widget,
+            self.connecting_element_type_widget,
+            self.connecting_element_submenu,
+        )
 
     def update_connecting_element_widget(self, *args):
         @self.outputs.action.capture()
         def callback():
-            for submenu in self.connecting_element_submenus.values():
-                submenu.update_connecting_element_widget(self.substation_ids_widget.value)
+            self.connecting_element_submenus[
+                self.connecting_element_type_widget.value
+            ].update_connecting_element_widget(self.substation_ids_widget.value)
 
         callback()
 
     def update_connecting_element_busbar_widget(self, *args):
         @self.outputs.action.capture()
         def callback():
-            for submenu in self.connecting_element_submenus.values():
-                submenu.update_busbar_widget(self.substation_ids_widget.value)
+            self.connecting_element_submenus[self.connecting_element_type_widget.value].update_busbar_widget(
+                self.substation_ids_widget.value
+            )
 
         callback()
 
     def record_connecting_element_busbar_actions(self, *args):
         @self.outputs.action.capture()
         def callback():
-            for submenu in self.connecting_element_submenus.values():
-                submenu.record_busbar_actions(self.substation_ids_widget.value)
+            self.connecting_element_submenus[self.connecting_element_type_widget.value].record_busbar_actions(
+                self.substation_ids_widget.value
+            )
 
         callback()

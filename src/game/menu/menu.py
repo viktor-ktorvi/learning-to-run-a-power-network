@@ -38,7 +38,7 @@ class Menu(ipywidgets.VBox):
         # TODO other potential submenus, e.g., generator, line
         self.substation_submenu = SubstationSubmenu(self.game, self.outputs, self.widget_width)
         self.set_element_type_submenu()
-        self.element_type_widget.observe(self.set_element_type_submenu)
+        self.element_type_widget.observe(self.set_element_type_submenu, names=["value"])
 
         # clear action
         clear_action_dict_button = ipywidgets.Button(description="Clear actions")
@@ -52,8 +52,6 @@ class Menu(ipywidgets.VBox):
 
         # reset attempt
         reset_attempt_button.on_click(self.reset_attempt)
-
-        # TODO reset and clear action have to update the busbar widget
 
         # continue simulation
         continue_simulation_button = ipywidgets.Button(description="Continue simulation")

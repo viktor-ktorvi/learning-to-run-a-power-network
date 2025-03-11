@@ -84,6 +84,8 @@ class Game:
             while True:
                 yield
 
+        # TODO is it possible to start from random points in time?
+
         initial_action_flag = True
         progress_bar = tqdm(while_loop())
         for _ in progress_bar:
@@ -108,6 +110,8 @@ class Game:
             )
 
             if done:
+                # TODO got this even though the threshold didn't trigger
+                #  what triggers the done signal exactly?
                 raise RuntimeError(f"Failed to run a power network. Cumulative reward = {self.cumulative_reward}")
 
             if (observation.rho >= self.rho_threshold).any():
