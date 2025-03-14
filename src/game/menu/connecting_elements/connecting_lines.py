@@ -1,4 +1,4 @@
-from src.game.menu_.connecting_elements.base import ConnectingElementBase
+from src.game.menu.connecting_elements.base import ConnectingElementBase
 from src.game.utils import add_or_overwrite_action, get_busbar_status, get_line_id
 
 

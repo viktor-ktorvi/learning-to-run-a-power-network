@@ -8,9 +8,9 @@ from ipywidgets.widgets.interaction import show_inline_matplotlib_plots
 from matplotlib import pyplot as plt
 
 from src.game.game import Game
-from src.game.menu_.connecting_elements.connecting_generator import ConnectingGenerators
-from src.game.menu_.connecting_elements.connecting_lines import ConnectingLines
-from src.game.menu_.connecting_elements.connecting_load import ConnectingLoads
+from src.game.menu.connecting_elements.connecting_generator import ConnectingGenerators
+from src.game.menu.connecting_elements.connecting_lines import ConnectingLines
+from src.game.menu.connecting_elements.connecting_load import ConnectingLoads
 
 
 class ConnectingElementType(StrEnum):

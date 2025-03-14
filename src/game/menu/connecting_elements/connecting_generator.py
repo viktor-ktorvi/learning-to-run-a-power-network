@@ -1,29 +1,28 @@
 import numpy as np
 
-from src.game.menu_.connecting_elements.base import ConnectingElementBase
+from src.game.menu.connecting_elements.base import ConnectingElementBase
 from src.game.utils import DONT_CLICK_THIS, add_or_overwrite_action, get_busbar_status
 
 
-# TODO lots of copy pasting from the generator side. Might need to be repeated for the storage elements
-class ConnectingLoads(ConnectingElementBase):
-    description: str = "Load ID"
+class ConnectingGenerators(ConnectingElementBase):
+    description: str = "Generator ID"
 
     def update_connecting_element_widget(self, *args, **kwargs):
         """
-        Get all the loads that connect to the current substation.
+        Get all the generators that connect to the current substation.
 
         Returns
         -------
         """
         environment = self.game.environment
-        loads_at_substation = list(np.arange(environment.n_load)[environment.load_to_subid == self.substation_id])
+        generators_at_substation = list(np.arange(environment.n_gen)[environment.gen_to_subid == self.substation_id])
 
         # for god-knows-what reason having the option list be [0] screws up the widget
-        if loads_at_substation == [0]:
-            loads_at_substation = [0, DONT_CLICK_THIS]
+        if generators_at_substation == [0]:
+            generators_at_substation = [0, DONT_CLICK_THIS]
 
-        self.connecting_element_widget.options = loads_at_substation
-        self.connecting_element_widget.value = loads_at_substation[0]
+        self.connecting_element_widget.options = generators_at_substation
+        self.connecting_element_widget.value = generators_at_substation[0]
 
         self.update_busbar_widget()
 
@@ -36,16 +35,17 @@ class ConnectingLoads(ConnectingElementBase):
         -------
         """
         action_dict = self.game.action_dict
-        load_idx = self.connecting_element_widget.value
+        generator_idx = self.connecting_element_widget.value
 
-        if load_idx == DONT_CLICK_THIS:
+        if generator_idx == DONT_CLICK_THIS:
+            # TODO why isn't this being triggered?
             raise RuntimeError(
                 "Told you not to click it. Could have been a 'Download virus' button for all you knew. It fixes some random bug that doesn't allow just [0] to be an option list."
             )
 
         self.busbar_widget.options = self.game.get_busbar_options()
         self.busbar_widget.value = get_busbar_status(
-            load_idx, action_dict["set_bus"]["loads_id"], self.game.observation.load_bus
+            generator_idx, action_dict["set_bus"]["generators_id"], self.game.observation.gen_bus
         )
 
         self.update_action_dictionary()
@@ -59,11 +59,11 @@ class ConnectingLoads(ConnectingElementBase):
         Returns
         -------
         """
-        load_idx = self.connecting_element_widget.value
-        self.game.action_dict["set_bus"]["loads_id"] = add_or_overwrite_action(
-            (load_idx, self.busbar_widget.value),
-            self.game.action_dict["set_bus"]["loads_id"],
-            self.game.observation.load_bus,
+        generator_idx = self.connecting_element_widget.value
+        self.game.action_dict["set_bus"]["generators_id"] = add_or_overwrite_action(
+            (generator_idx, self.busbar_widget.value),
+            self.game.action_dict["set_bus"]["generators_id"],
+            self.game.observation.gen_bus,
         )
 
         self.print_action_dictionary()
