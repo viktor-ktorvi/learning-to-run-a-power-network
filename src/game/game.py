@@ -8,12 +8,15 @@ from grid2op.PlotGrid import PlotMatplot
 from tqdm import tqdm
 
 
-# TODO docs
 class Game:
+    """A class that keeps the state of the game, e.g., the state of the power grid simulation."""
+
     action_dict: dict
     rho_threshold: float = 0.99
 
     cumulative_reward: float = 0.0
+    reward: float = 0.0
+    info: dict = {}
 
     def __init__(self, environment: Environment):
         self.environment = environment
@@ -24,9 +27,23 @@ class Game:
         self.observation = environment.reset()
 
     def clear_action_dict(self):
+        """
+        Clear the action dictionary.
+
+        Returns
+        -------
+        """
         self.action_dict = {"set_bus": {"lines_or_id": [], "lines_ex_id": [], "generators_id": [], "loads_id": []}}
 
     def print_action_dict(self):
+        """
+        Print the action dictionary.
+
+        Returns
+        -------
+        """
+        # TODO could also print the status of the elements
+
         line_indices_str = ""
         line_or_to_subid_str = ""
         line_ex_to_subid_str = ""
@@ -72,12 +89,60 @@ class Game:
         print()
 
     def get_substation_ids(self) -> list[int]:
+        """
+        Get a list of all substation IDs.
+
+        Returns
+        -------
+        substation_ids: list[int]
+            List of substation IDs.
+        """
         return list(range(self.environment.n_sub))
 
     def get_busbar_options(self) -> list[int]:
+        """
+        Get a list of possible busbar states.
+
+        Returns
+        -------
+        busbar_options: list[int]
+            List of possible busbar states.
+        """
         return list(range(1, self.environment.n_busbar_per_sub + 1))
 
-    def continue_simulation(self, initial_action_dict: dict) -> Observation:
+    def print_info(self):
+        """
+        Print the information and reward received after stepping through the environment.
+
+        Returns
+        -------
+        """
+        print(f"Action reward: {self.reward}")
+        print("\nInfo: ", end="")
+        pp = pprint.PrettyPrinter(depth=10)
+        pp.pprint(self.info)
+
+    def continue_simulation(self, initial_action_dict: dict) -> tuple[Observation, float, bool, dict]:
+        """
+        Continue the simulation. Apply an initial action, then keep doing nothing until any of the lines become
+        overloaded. At that point stop and return some information.
+
+        Parameters
+        ----------
+        initial_action_dict: dict
+            Initial action dictionary.
+
+        Returns
+        -------
+        observation: Observation
+            Observation.
+        reward: float
+            Reward.
+        done: bool
+            Done signal.
+        info: dict
+            Information dictionary.
+        """
         do_nothing_agent = DoNothingAgent(self.environment.action_space)
 
         def while_loop():
@@ -98,6 +163,8 @@ class Game:
             observation, reward, done, info = self.environment.step(action)
 
             self.observation = observation
+            self.info = info
+            self.reward = reward
 
             self.cumulative_reward += reward
 
@@ -112,7 +179,10 @@ class Game:
             if done:
                 # TODO got this even though the threshold didn't trigger
                 #  what triggers the done signal exactly?
-                raise RuntimeError(f"Failed to run a power network. Cumulative reward = {self.cumulative_reward}")
+
+                self.print_info()
+
+                raise RuntimeError(f"Done signal was True. Cumulative reward = {self.cumulative_reward}")
 
             if (observation.rho >= self.rho_threshold).any():
-                return observation
+                return observation, reward, done, info

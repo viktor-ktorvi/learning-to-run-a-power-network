@@ -1,16 +1,28 @@
-import ipywidgets
 import numpy as np
 from grid2op.Environment import Environment
 
-# TODO docs
-
-
-class Outputs:
-    action: ipywidgets.Output = ipywidgets.Output()
-    plot: ipywidgets.Output = ipywidgets.Output()
-
 
 def get_line_id(environment: Environment, substation_id: int, line_destination: int) -> tuple[np.array, np.array]:
+    """
+    Get the line index for both the OR and EX direction. Only one of these will contain a value, while the other one
+    will be an empty array.
+
+    Parameters
+    ----------
+    environment: Environment
+        Environment
+    substation_id: int
+        Substation ID.
+    line_destination: int
+        Connecting substation ID, e.g., line destination.
+
+    Returns
+    -------
+    line_or_idx: np.array
+        Array of size 1x1 if the line originates at substation_id. Otherwise, an empty array.
+    line_ex_idx: np.array
+        Array of size 1x1 if the line finishes at substation_id. Otherwise, an empty array.
+    """
     line_or_mask = (environment.line_or_to_subid == substation_id) & (environment.line_ex_to_subid == line_destination)
     line_ex_mask = (environment.line_ex_to_subid == substation_id) & (environment.line_or_to_subid == line_destination)
 
@@ -20,7 +32,12 @@ def get_line_id(environment: Environment, substation_id: int, line_destination: 
     return line_or_idx, line_ex_idx
 
 
-def get_busbar_status(element_idx: int, action_list: list[tuple[int, int]], element_busbar_statuses: np.array):
+def get_busbar_status(
+    element_idx: int,
+    action_list: list[tuple[int, int]],
+    element_busbar_statuses: np.array,
+    disregard_action_dict: bool = False,
+):
     """
     Get the status of a given busbar. If an action has been performed return the status after the action, otherwise read
     the status from the environment observation.
@@ -33,6 +50,8 @@ def get_busbar_status(element_idx: int, action_list: list[tuple[int, int]], elem
         List of actions performed.
     element_busbar_statuses: np.array
         Numpy array containing the status of busbars of the elements.
+    disregard_action_dict: bool
+        If True, then disregard the action dictionary and just read the status from the observation.
 
     Returns
     -------
