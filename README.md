@@ -1,85 +1,8 @@
 # Learning to run a power network 
 
-Trying out some things for the [grid2op](https://grid2op.readthedocs.io/en/latest/index.html) RL power grid environment.
-
 ## Description
 
-Repository template that features automation and advanced tools to help me make nice looking projects. 
-This template is intended to be used for libraries or applications that will be maintained, 
-and even possibly distributed over time.
-
-This is ideal for large team projects where tools and configurations are abstracted 
-away in order for team members to focus on the code and purpose of the project instead 
-of the *how* things are configured.
-
-The purpose of this template is to help with code quality, structure and reproducibility 
-while also enabling best practices for longer term projects.
-
-There is, however, a learning curve that comes with these benefits, and you should seek 
-support if this is the first time you are starting a project with this template or 
-if you are not familiar with tools like `Makefile`, `nox`, `pre-commit` and `poetry`.
-
-This template creates a python package, contained in [src/](src/) (could be renamed; see instructions below), 
-that will contain your different modules.
-
-For more information about python packages and modules, 
-[Python Modules and Packages – An Introduction](https://realpython.com/python-modules-packages/).
-
-## Initialization
-
-Please follow these steps:
-
-1. Set up the repository:
-   * Automatic way - On the template's GitHub page (TODO link), 
-     create a new repository by using the `Use this template` button, near the top right corner. 
-     Do not include all branches.
-     * If you already have existing code, transfer it either in [src/](src/) or [scripts/](scripts/), 
-       depending on it's nature
-       * Modules (python code that is meant to be _imported_ in other python files) should go into the 
-         [src folder](src/README.md)
-       * Python scripts that are meant to be executed via the command line
-         should go into the [scripts folder](scripts/README.md)
-
-   * It can also be done manually (though longer and more error-prone):
-      1. Clone or download the `my-python-project-template` repository (this repository)
-      2. Either start a new GitHub repository, or select an existing one (the target repository)
-      3. Copy the files and folders of the `my-python-project-template` repository into your target repository.
-         * Do not copy the `.git` folder from the `my-python-project-template`.
-         * Move your existing code
-           * Modules (python code that is meant to be _imported_ in other python files) should go into the 
-             [src folder](src/README.md)
-           * Python scripts that are meant to be executed via the command line
-             should go into the [scripts folder](scripts/README.md)
-2. Rename the python package (optional step) - This will allow you to use `from <package_name> import ...` 
-   instead of `from src import ...`  :
-   1. Rename [src folder](src) to your package name
-      * Make sure the name in `snake_case`, like other python modules and packages.
-      * Bad examples : `my-package`, `MyPackage`, `My Package`
-      * Good example : `my_package`
-   2. Set the package name on line #2 of the [pyproject.toml](pyproject.toml) file by replacing `src` with the 
-      same name used above.
-   3. Adjust the *src/* folder name consequently in the [noxfile.py](noxfile.py)
-   4. Adjust the *src/* folder name consequently in the [utils imports](src/utils.py)
-3. Write your name on line #5 in [pyproject.toml](pyproject.toml), and write a short description on line #4
-4. Make sure to rename the following:
-   * Environment name in [environment.yml](environment.yml)
-   * `APPLICATION_NAME` and `CONDA_ENVIRONMENT` in [Makefile.variables](Makefile.variables)
-   * Update <REPOSITORY_URL> to real repository url in both [CHANGES.md](CHANGES.md) and [pyproject.toml](pyproject.toml)
-5. Follow the rest of the instructions in this README
-6. Remove this section (_Initialization_) from the README of your target repository and modify it's title 
-   and description
-
-Installing this package for the first time (see [Installation](#installation)) 
-will create the `poetry.lock` file, which will set the different library versions used 
-by the project, and therefore help with reproducibility and reduce the classic but 
-annoying "but it works on my machine" situation.
-
-However, this `poetry.lock` file can be problematic when using locally compiled python 
-wheels.
-
-If working on multiple different clusters, it might be better to add the `poetry.lock` 
-file to your `.gitignore`, and manage your dependencies with either explicit versions or 
-with [Tilde requirements](https://python-poetry.org/docs/dependency-specification/#tilde-requirements).
+Trying out some things for the [grid2op](https://grid2op.readthedocs.io/en/latest/index.html) RL power grid environment.
 
 ## Requirements
 
@@ -89,16 +12,42 @@ some basic tools for development are already installed.
 The project uses a Makefile to automate most operations. If `make` is available on your 
 machine there's a good chance this will work.
 
-The following Makefile files should not be modified, but can be consulted:
+## Initialization
 
-* [Makefile](Makefile) : Orchestration of the different files
-* [base.make](.make/base.make) : Shared utilities, project agnostic.
+### Git
 
-The following Makefile files are project or user specific:
+Clone or fork the repository.
 
-* [Makefile.variables](Makefile.variables) : Shared project variables.
-* [Makefile.targets](Makefile.targets) : Shared project targets.
-* [Makefile.private](Makefile.private.example) : User specific variables and targets.
+```shell
+git clone https://github.com/viktor-ktorvi/learning-to-run-a-power-network.git
+cd learning-to-run-a-power-network
+```
+
+### Make
+If your machine doesn't already have make, run the following commands:
+
+```shell
+sudo apt-get update
+sudo apt install build-essential
+```
+
+### Conda environment
+
+If conda isn't already installed.
+```shell
+make conda-install 
+```
+
+If conda wasn't already installed close the shell and open it again.
+Navigate back to the project repo, and create and activate the environment:
+
+```shell
+make conda-create-env
+conda activate grid2op-env
+make install
+```
+
+That should be it. You should now be able to run all the scripts and notebooks. If any problems arise, please raise an issue!
 
 ## Basic Information
 
