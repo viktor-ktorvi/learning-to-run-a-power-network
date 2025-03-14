@@ -96,9 +96,7 @@ class Menu(ipywidgets.VBox):
         """
         action = self.game.environment.action_space(self.game.action_dict)
         observation, reward, done, info = copy.deepcopy(self.game.environment).step(action)
-        self.game.plotter.plot_obs(observation)
-        plt.gcf().suptitle("Grid after applying the action")  # TODO use the plot_grid_state function
-        show_inline_matplotlib_plots()
+        self.plot_grid_state(observation, "Grid after applying the action")
 
         self.game.print_info()
 
@@ -119,8 +117,7 @@ class Menu(ipywidgets.VBox):
         def reset_menu():
             self.game.clear_action_dict()
             self.__init__(self.game, continue_simulation=False)
-            self.plot_grid_state(self.game.observation)
-            show_inline_matplotlib_plots()
+            self.plot_grid_state(self.game.observation, "Grid with a problematic state")
 
             self.game.print_info()
 
@@ -132,7 +129,7 @@ class Menu(ipywidgets.VBox):
 
         print_action_dict()
 
-    def plot_grid_state(self, observation: Observation):
+    def plot_grid_state(self, observation: Observation, title: str):
         """
         Plot the grid state for the given observation.
 
@@ -140,12 +137,14 @@ class Menu(ipywidgets.VBox):
         ----------
         observation: Observation
             Observation.
+        title: str
+            Title.
 
         Returns
         -------
         """
         self.game.plotter.plot_obs(observation)
-        plt.gcf().suptitle("Grid with a problematic state")
+        plt.gcf().suptitle(title)
         show_inline_matplotlib_plots()
 
     def continue_simulation(self, *args, **kwargs):
@@ -165,7 +164,7 @@ class Menu(ipywidgets.VBox):
         def continue_sim():
             observation, reward, done, info = self.game.continue_simulation(self.game.action_dict)
             self.game.clear_action_dict()
-            self.plot_grid_state(observation)
+            self.plot_grid_state(observation, "Grid with a problematic state")
             self.game.print_info()
 
             show_inline_matplotlib_plots()

@@ -38,6 +38,7 @@ class ConnectingGenerators(ConnectingElementBase):
         generator_idx = self.connecting_element_widget.value
 
         if generator_idx == DONT_CLICK_THIS:
+            # TODO why isn't this being triggered?
             raise RuntimeError(
                 "Told you not to click it. Could have been a 'Download virus' button for all you knew. It fixes some random bug that doesn't allow just [0] to be an option list."
             )
