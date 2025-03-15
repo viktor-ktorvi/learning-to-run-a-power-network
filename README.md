@@ -49,6 +49,16 @@ make install
 
 That should be it. You should now be able to run all the scripts and notebooks. If any problems arise, please raise an issue!
 
+### Note when pulling and updated version of the codebase
+
+When pulling and updated version of the codebase, make sure to run 
+
+```shell
+poetry install
+```
+
+to update the required environment packages.
+
 ## Basic Information
 
 The different targets and their description can be examined by executing the command
