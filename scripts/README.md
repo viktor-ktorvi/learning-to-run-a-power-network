@@ -18,6 +18,7 @@ itself.
 
 List of scripts with their descriptions
 
-| Scripts                     | Description                                                                                                             |
-|-----------------------------|-------------------------------------------------------------------------------------------------------------------------|
-| `scripts/example_script.py` | An example script that uses a hydra config and (unrelatedly) prints 'Hello world' : `python3 -m scripts.example_script` |
+| Scripts                           | Description                                                                                                                                                                                               |
+|-----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `scripts/example_script.py`       | An example script that uses a hydra config and (unrelatedly) prints 'Hello world' : `python3 -m scripts.example_script`                                                                                   |
+| `scripts/positional_encodings.py` | Visualizing some graph positional encodings, e.g., Laplacian positional encodings : `python3 -m scripts.positional_encodings positional_encodings.num_components=3 environment.name=l2rpn_case14_sandbox` |

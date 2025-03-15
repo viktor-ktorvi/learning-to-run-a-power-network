@@ -13,6 +13,13 @@ pandapower = "^2.14.11"
 numba = "^0.61.0"
 matplotlib = "3.7.0"
 ipympl = "^0.9.7"
+torch-geometric = "^2.6.1"
+torch = {version = "2.5.1", source = "torch_latest_cpu"}
+pyg-lib = {version = "^0.4.0+pt25cpu", source = "torch_geometric_cpu"}
+torch-scatter = {version = "^2.1.2+pt25cpu", source = "torch_geometric_cpu"}
+torch-sparse = {version = "^0.6.18+pt25cpu", source = "torch_geometric_cpu"}
+torch-cluster = {version = "^1.6.3+pt25cpu", source = "torch_geometric_cpu"}
+torch-spline-conv = {version = "^1.2.2+pt25cpu", source = "torch_geometric_cpu"}
 
 [tool.poetry.group.dev]
 optional = true
@@ -38,6 +45,19 @@ optional = true
 jupyterlab = "^4.0.10"
 notebook = "^7.0.6"
 jupyterlab-lsp = "^5.0.1"
+
+
+
+[[tool.poetry.source]]
+name = "torch_latest_cpu"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
+
+
+[[tool.poetry.source]]
+name = "torch_geometric_cpu"
+url = "https://data.pyg.org/whl/torch-2.5.0+cpu.html"
+priority = "explicit"
 
 [build-system]
 requires = ["poetry-core"]
