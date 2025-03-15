@@ -1,0 +1,5 @@
+num_components: 3
+
+line_graph:
+  line_width: 5
+  node_size: 50

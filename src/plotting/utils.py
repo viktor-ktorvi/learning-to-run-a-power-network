@@ -1,14 +1,15 @@
 import matplotlib
-from omegaconf import DictConfig
+
+from src.config.config import Config
 
 
-def set_rcParams(cfg: DictConfig):
+def set_rcParams(cfg: Config):
     """
     Set matplotlib parameters.
 
     Parameters
     ----------
-    cfg
+    cfg: Config
         Config.
     Returns
     -------
